@@ -10,9 +10,8 @@ import Page from '../components/Page';
 
 // ----------------------------------------------------------------------
 
-const handleApprove = (row) => {
-  console.log(row.id);
-  row.isApproved = true;
+const handleApproveStatusChange = (row) => {
+  row.isApproved = !row.isApproved;
 };
 
 const columns = [
@@ -53,17 +52,32 @@ const columns = [
     width: 170,
     editable: false
   },
+  // {
+  //   field: 'action',
+  //   headerName: 'Action',
+  //   width: 110,
+  //   editable: false,
+  //   renderCell: (params) =>
+  //     !params.row.isApproved ? (
+  //       <Button variant="outlined" onClick={() => handleApprove(params.row)}>
+  //         Approve
+  //       </Button>
+  //     ) : (
+  //       <Button variant="outlined" color="error" onClick={() => handleDisApprove(params.row)}>
+  //         Reject
+  //       </Button>
+  //     )
+  // }
   {
     field: 'action',
     headerName: 'Action',
     width: 110,
     editable: false,
-    renderCell: (params) =>
-      !params.row.isApproved && (
-        <Button variant="outlined" onClick={() => handleApprove(params.row)}>
-          Approve
-        </Button>
-      )
+    renderCell: (params) => (
+      <Button variant="outlined" onClick={() => handleApproveStatusChange(params.row)}>
+        Change
+      </Button>
+    )
   }
 ];
 
@@ -111,7 +125,7 @@ const rows = [
   {
     id: 6,
     name: 'Melisandre',
-    email: null,
+    email: 'sample',
     gender: 'Male',
     isApproved: true,
     userType: 'School Leaver'
