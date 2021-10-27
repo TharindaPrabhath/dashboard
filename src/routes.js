@@ -11,6 +11,9 @@ import Blog from './pages/Blog';
 import User from './pages/User';
 import NotFound from './pages/Page404';
 import NewUser from './pages/NewUser';
+import Opportunity from './pages/Opportunity';
+import NewOpportunity from './pages/NewOpportunity';
+import Video from './pages/Video';
 
 // ----------------------------------------------------------------------
 
@@ -24,6 +27,9 @@ export default function Router() {
         { path: 'app', element: <DashboardApp /> },
         { path: 'user', element: <User /> },
         { path: 'user/new', element: <NewUser /> },
+        { path: 'opportunity', element: <Opportunity /> },
+        { path: 'opportunity/new', element: <NewOpportunity /> },
+        { path: 'video', element: <Video /> },
         { path: 'products', element: <Products /> },
         { path: 'blog', element: <Blog /> }
       ]
