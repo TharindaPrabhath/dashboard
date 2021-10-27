@@ -10,6 +10,11 @@ import Page from '../components/Page';
 
 // ----------------------------------------------------------------------
 
+const handleApprove = (row) => {
+  console.log(row.id);
+  row.isApproved = true;
+};
+
 const columns = [
   { field: 'id', headerName: 'ID', width: 90 },
   {
@@ -53,7 +58,12 @@ const columns = [
     headerName: 'Action',
     width: 110,
     editable: false,
-    renderCell: (params) => !params.row.isApproved && <Button variant="outlined">Approve</Button>
+    renderCell: (params) =>
+      !params.row.isApproved && (
+        <Button variant="outlined" onClick={() => handleApprove(params.row)}>
+          Approve
+        </Button>
+      )
   }
 ];
 
