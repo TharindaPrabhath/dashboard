@@ -13,36 +13,123 @@ import Page from '../components/Page';
 const columns = [
   { field: 'id', headerName: 'ID', width: 90 },
   {
-    field: 'firstName',
-    headerName: 'First name',
-    width: 150,
-    editable: true
+    field: 'name',
+    headerName: 'Name',
+    width: 180,
+    editable: false
   },
   {
-    field: 'lastName',
-    headerName: 'Last name',
-    width: 150,
-    editable: true
+    field: 'email',
+    headerName: 'Email',
+    width: 180,
+    editable: false
   },
   {
-    field: 'age',
-    headerName: 'Age',
-    type: 'number',
+    field: 'gender',
+    headerName: 'Gender',
+    width: 150,
+    editable: false
+  },
+  {
+    field: 'isApproved',
+    headerName: 'Status',
     width: 110,
-    editable: true
+    editable: false,
+    renderCell: (params) =>
+      params.row.isApproved ? (
+        <Typography color="green">approved</Typography>
+      ) : (
+        <Typography color="red">not approved</Typography>
+      )
+  },
+  {
+    field: 'userType',
+    headerName: 'User Type',
+    width: 170,
+    editable: false
+  },
+  {
+    field: 'action',
+    headerName: 'Action',
+    width: 110,
+    editable: false,
+    renderCell: (params) => !params.row.isApproved && <Button variant="outlined">Approve</Button>
   }
 ];
 
 const rows = [
-  { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
-  { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
-  { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
-  { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
-  { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
-  { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
-  { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
-  { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
-  { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 }
+  {
+    id: 1,
+    name: 'Snow',
+    email: 'Jon',
+    gender: 'Male',
+    isApproved: true,
+    userType: 'School Leaver'
+  },
+  {
+    id: 2,
+    name: 'Lannister',
+    email: 'Cersei',
+    gender: 'Male',
+    isApproved: false,
+    userType: 'School Leaver'
+  },
+  {
+    id: 3,
+    name: 'Lannister',
+    email: 'Jaime',
+    gender: 'Male',
+    isApproved: true,
+    userType: 'School Leaver'
+  },
+  {
+    id: 4,
+    name: 'Stark',
+    email: 'Arya',
+    gender: 'Male',
+    isApproved: true,
+    userType: 'School Leaver'
+  },
+  {
+    id: 5,
+    name: 'Targaryen',
+    email: 'Daenerys',
+    gender: 'Male',
+    isApproved: false,
+    userType: 'School Leaver'
+  },
+  {
+    id: 6,
+    name: 'Melisandre',
+    email: null,
+    gender: 'Male',
+    isApproved: true,
+    userType: 'School Leaver'
+  },
+  {
+    id: 7,
+    name: 'Clifford',
+    email: 'Ferrara',
+    gender: 'Male',
+    isApproved: true,
+    userType: 'School Leaver'
+  },
+  {
+    id: 8,
+    name: 'Frances',
+    email: 'Rossini',
+    gender: 'Male',
+    isApproved: true,
+    userType: 'School Leaver'
+  },
+  {
+    id: 9,
+    name: 'Roxie',
+    email: 'Harvey',
+    gender: 'Male',
+    isApproved: true,
+    userType: 'School Leaver'
+  }
 ];
 
 // ----------------------------------------------------------------------
