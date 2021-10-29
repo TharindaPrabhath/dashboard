@@ -1,7 +1,6 @@
 /* eslint-disable prettier/prettier */
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 import { Icon } from '@iconify/react';
 import plusFill from '@iconify/icons-eva/plus-fill';
@@ -93,38 +92,49 @@ const rows = [
 // ----------------------------------------------------------------------
 
 export default function User() {
-
   const [users, setUsers] = useState([]);
 
   const handleApproveStatusChange = (row) => {
-    console.log(row.id)
-    if(row.isApproved){
-      axios.put(`http://localhost:8000/api/users/decline/${row.id}`).then(()=> updateCell(row)).catch(e=> console.err(e));
-    }else{
-      axios.put(`http://localhost:8000/api/users/approve/${row.id}`).then(()=> updateCell(row)).catch(e=> console.err(e));
+    console.log(row.id);
+    if (row.isApproved) {
+      axios
+        .put(`http://localhost:8000/api/users/decline/${row.id}`)
+        .then(() => updateCell(row))
+        .catch((e) => console.err(e));
+    } else {
+      axios
+        .put(`http://localhost:8000/api/users/approve/${row.id}`)
+        .then(() => updateCell(row))
+        .catch((e) => console.err(e));
     }
   };
-  
+
   // changes the isApproved state
   const updateCell = (row) => {
     const arr = [];
-    let edited = {}
-    users.map((user)=>{
-      if(user.id === row.id){
-        edited = {id: row.id, isApproved: !user.isApproved, email: row.email, gender: row.gender, userType: row.userType}; 
+    let edited = {};
+    users.map((user) => {
+      if (user.id === row.id) {
+        edited = {
+          id: row.id,
+          isApproved: !user.isApproved,
+          email: row.email,
+          gender: row.gender,
+          userType: row.userType
+        };
         arr.push(edited);
-      }else{
+      } else {
         arr.push(user);
       }
       return false;
-    })
+    });
     setUsers(arr);
-  }
-  
+  };
+
   const handleDeclineStatusChange = (row) => {
     row.isApproved = !row.isApproved;
   };
-  
+
   const columns = [
     { field: 'id', headerName: 'ID', width: 90 },
     {
@@ -155,7 +165,7 @@ export default function User() {
       field: 'isApproved',
       headerName: 'Status',
       width: 110,
-      editable: false,
+      editable: false
       // renderCell: (params) =>
       //   params.row.isApproved ? (
       //     <Typography color="red">not approved</Typography>
@@ -163,7 +173,7 @@ export default function User() {
       //     <Typography color="green">approved</Typography>
       //   )
     },
-    
+
     // {
     //   field: 'action',
     //   headerName: 'Action',
@@ -186,38 +196,44 @@ export default function User() {
       width: 110,
       editable: false,
       renderCell: (params) => (
-        <Button variant="outlined" color={params.row.isApproved? "error" : "success"} onClick={() => handleApproveStatusChange(params.row)}>
-          {params.row.isApproved? "Decline" : "Approve"}
+        <Button
+          variant="outlined"
+          color={params.row.isApproved ? 'error' : 'success'}
+          onClick={() => handleApproveStatusChange(params.row)}
+        >
+          {params.row.isApproved ? 'Decline' : 'Approve'}
         </Button>
       )
     }
   ];
-  
+
   const getUser = (data) => ({
-      id: data._id,
-      name: data.name,
-      email: data.email,
-      isApproved: data.isApproved,
-      gender: data.gender,
-      userType: data.userType
-    })
+    id: data._id,
+    name: data.name,
+    email: data.email,
+    isApproved: data.isApproved,
+    gender: data.gender,
+    userType: data.userType
+  });
 
   const toUsers = (dataArr) => {
     const arr = [];
-   
-    dataArr.map((i)=>{
-      arr.push(getUser(i))
+
+    dataArr.map((i) => {
+      arr.push(getUser(i));
       return false;
-    })
+    });
     return arr;
-  }
+  };
 
   useEffect(() => {
     try {
       axios
         .get(`http://localhost:8000/api/users`)
-        .then((response) => {setUsers(toUsers(response.data))});
-        
+        .then((response) => {
+          setUsers(toUsers(response.data));
+        })
+        .catch((e) => console.error(e));
     } catch (err) {
       // Handle Error Here
       console.error(err);

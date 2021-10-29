@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Navigate, useRoutes } from 'react-router-dom';
 // layouts
 import DashboardLayout from './layouts/dashboard';
@@ -15,23 +16,32 @@ import Opportunity from './pages/Opportunity';
 import NewOpportunity from './pages/NewOpportunity';
 import Video from './pages/Video';
 
+//  local storege
+import useLocalStorage from './utils/localStorage';
+
 // ----------------------------------------------------------------------
 
 export default function Router() {
+  const { getAccessToken } = useLocalStorage();
+  const isAuth = !!getAccessToken();
+
   return useRoutes([
     {
       path: '/dashboard',
       element: <DashboardLayout />,
       children: [
         { element: <Navigate to="/dashboard/app" replace /> },
-        { path: 'app', element: <DashboardApp /> },
-        { path: 'user', element: <User /> },
-        { path: 'user/new', element: <NewUser /> },
-        { path: 'opportunity', element: <Opportunity /> },
-        { path: 'opportunity/new', element: <NewOpportunity /> },
-        { path: 'video', element: <Video /> },
-        { path: 'products', element: <Products /> },
-        { path: 'blog', element: <Blog /> }
+        { path: 'app', element: isAuth ? <DashboardApp /> : <Navigate to="/login" /> },
+        { path: 'user', element: isAuth ? <User /> : <Navigate to="/login" /> },
+        { path: 'user/new', element: isAuth ? <NewUser /> : <Navigate to="/login" /> },
+        { path: 'opportunity', element: isAuth ? <Opportunity /> : <Navigate to="/login" /> },
+        {
+          path: 'opportunity/new',
+          element: isAuth ? <NewOpportunity /> : <Navigate to="/login" />
+        },
+        { path: 'video', element: isAuth ? <Video /> : <Navigate to="/login" /> }
+        // { path: 'products', element: <Products /> },
+        // { path: 'blog', element: <Blog /> }
       ]
     },
     {
