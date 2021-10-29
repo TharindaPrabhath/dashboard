@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 import { Icon } from '@iconify/react';
 import plusFill from '@iconify/icons-eva/plus-fill';
@@ -17,7 +17,6 @@ import Page from '../components/Page';
 const handleDelete = (row) => {
   row.isApproved = !row.isApproved;
 };
-
 
 const columns = [
   // { field: 'id', headerName: 'ID', width: 90 },
@@ -128,33 +127,34 @@ const rows = [
 // ----------------------------------------------------------------------
 
 export default function Video() {
-
   const [videos, setVideos] = useState([]);
-  
+
   const getVideo = (data) => ({
-      id: data._id,
-      ID: data.videoID,
-      Type: data.type,
-      name: data.name,
-      link: data.link
-    })
+    id: data._id,
+    ID: data.videoID,
+    Type: data.type,
+    name: data.name,
+    link: data.link
+  });
 
   const toVideos = (dataArr) => {
     const arr = [];
-   
-    dataArr.map((i)=>{
-      arr.push(getVideo(i))
+
+    dataArr.map((i) => {
+      arr.push(getVideo(i));
       return false;
-    })
+    });
     return arr;
-  }
+  };
 
   useEffect(() => {
     try {
       axios
         .get(`http://localhost:8000/api/videos`)
-        .then((response) => {setVideos(toVideos(response.data))});
-        
+        .then((response) => {
+          setVideos(toVideos(response.data));
+        })
+        .catch((e) => console.error(e));
     } catch (err) {
       // Handle Error Here
       console.error(err);
