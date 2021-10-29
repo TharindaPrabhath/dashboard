@@ -1,4 +1,7 @@
 /* eslint-disable prettier/prettier */
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+
 import { Icon } from '@iconify/react';
 import plusFill from '@iconify/icons-eva/plus-fill';
 import { Link as RouterLink } from 'react-router-dom';
@@ -11,10 +14,15 @@ import Page from '../components/Page';
 
 // ----------------------------------------------------------------------
 
+const handleDelete = (row) => {
+  row.isApproved = !row.isApproved;
+};
+
+
 const columns = [
-  { field: 'id', headerName: 'ID', width: 90 },
+  // { field: 'id', headerName: 'ID', width: 90 },
   {
-    field: 'videoID',
+    field: 'ID',
     headerName: 'Video ID',
     width: 180,
     editable: false
@@ -26,7 +34,7 @@ const columns = [
     editable: false
   },
   {
-    field: 'type',
+    field: 'Type',
     headerName: 'Type',
     width: 150,
     editable: false
@@ -37,6 +45,17 @@ const columns = [
     width: 220,
     editable: false,
     renderCell: (params) => <a href={params.row.link}>{params.row.link}</a>
+  },
+  {
+    field: 'action',
+    headerName: 'Action',
+    width: 110,
+    editable: false,
+    renderCell: (params) => (
+      <Button variant="outlined" onClick={() => handleDelete(params.row)}>
+        Delete
+      </Button>
+    )
   }
 ];
 
@@ -109,6 +128,41 @@ const rows = [
 // ----------------------------------------------------------------------
 
 export default function Video() {
+
+  const [videos, setVideos] = useState([]);
+  
+  const getVideo = (data) => ({
+      id: data._id,
+      ID: data.videoID,
+      Type: data.type,
+      name: data.name,
+      link: data.link
+    })
+
+  const toVideos = (dataArr) => {
+    const arr = [];
+   
+    dataArr.map((i)=>{
+      arr.push(getVideo(i))
+      return false;
+    })
+    return arr;
+  }
+
+  useEffect(() => {
+    try {
+      axios
+        .get(`http://localhost:8000/api/videos`)
+        .then((response) => {setVideos(toVideos(response.data))});
+        
+    } catch (err) {
+      // Handle Error Here
+      console.error(err);
+    } // };
+  }, []);
+
+  console.log(videos);
+
   return (
     <Page title="Video">
       <Container>
@@ -129,7 +183,7 @@ export default function Video() {
 
         <Card>
           <DataGrid
-            rows={rows}
+            rows={videos}
             columns={columns}
             pageSize={5}
             rowsPerPageOptions={[5]}

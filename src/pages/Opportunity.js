@@ -1,4 +1,8 @@
 /* eslint-disable prettier/prettier */
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+
+
 import { Icon } from '@iconify/react';
 import plusFill from '@iconify/icons-eva/plus-fill';
 import { Link as RouterLink } from 'react-router-dom';
@@ -11,12 +15,18 @@ import Page from '../components/Page';
 
 // ----------------------------------------------------------------------
 
-const handleApproveStatusChange = (row) => {
+const handleisApprove = (row) => {
   row.isApproved = !row.isApproved;
 };
 
 const columns = [
-  { field: 'id', headerName: 'ID', width: 90 },
+  // { field: 'id', headerName: 'ID', width: 90 },
+  {
+    field: 'image',
+    headerName: 'Image',
+    width: 180,
+    editable: false,
+    renderCell: (params) =>   params.row.image && <img style={{width:"150px", height:"150px" }} src={params.row.image} alt="opportunity" />},
   {
     field: 'name',
     headerName: 'Name',
@@ -24,17 +34,29 @@ const columns = [
     editable: false
   },
   {
-    field: 'email',
-    headerName: 'Email',
+    field: 'oppType',
+    headerName: 'Opportunity Type',
     width: 180,
     editable: false
   },
   {
-    field: 'gender',
-    headerName: 'Gender',
+    field: 'userType',
+    headerName: 'User Type',
     width: 150,
     editable: false
   },
+  {
+    field: 'deadline',
+    headerName: 'deadline',
+    width: 170,
+    editable: false
+  },
+  // {
+  //   field: 'provName',
+  //   headerName: 'Provider Name',
+  //   width: 180,
+  //   editable: false
+  // },
   {
     field: 'isApproved',
     headerName: 'Status',
@@ -42,45 +64,39 @@ const columns = [
     editable: false,
     renderCell: (params) =>
       params.row.isApproved ? (
-        <Typography color="green">approved</Typography>
+        <Typography color="green">Posted</Typography>
       ) : (
-        <Typography color="red">not approved</Typography>
+        <Typography color="red">Hiden</Typography>
       )
   },
-  {
-    field: 'userType',
-    headerName: 'User Type',
-    width: 170,
-    editable: false
-  },
-  // {
-  //   field: 'action',
-  //   headerName: 'Action',
-  //   width: 110,
-  //   editable: false,
-  //   renderCell: (params) =>
-  //     !params.row.isApproved ? (
-  //       <Button variant="outlined" onClick={() => handleApprove(params.row)}>
-  //         Approve
-  //       </Button>
-  //     ) : (
-  //       <Button variant="outlined" color="error" onClick={() => handleDisApprove(params.row)}>
-  //         Reject
-  //       </Button>
-  //     )
-  // }
   {
     field: 'action',
     headerName: 'Action',
     width: 110,
     editable: false,
-    renderCell: (params) => (
-      <Button variant="outlined" onClick={() => handleApproveStatusChange(params.row)}>
-        Change
-      </Button>
-    )
-  }
-];
+    renderCell: (params) =>
+      !params.row.isApproved ? (
+        <Button variant="outlined" onClick={() => handleisApprove(params.row)}>
+          Approve
+        </Button>
+      ) : (
+        <Button variant="outlined" color="error" onClick={() => handleisApprove(params.row)}>
+          Hide
+        </Button>
+      )
+  },
+//   {
+//     field: 'action',
+//     headerName: 'Action',
+//     width: 110,
+//     editable: false,
+//     renderCell: (params) => (
+//       <Button variant="outlined" onClick={() => handleApproveStatusChange(params.row)}>
+//         Approve
+//       </Button>
+//     )
+//   }
+ ];
 
 const rows = [
   {
@@ -89,7 +105,7 @@ const rows = [
     email: 'Jon',
     gender: 'Male',
     isApproved: true,
-    userType: 'School Leaver'
+    userType: 'School Leaver',
   },
   {
     id: 2,
@@ -160,6 +176,42 @@ const rows = [
 // ----------------------------------------------------------------------
 
 export default function Opportunity() {
+  const [opps, setOpps] = useState([]);
+  
+  const getOpp = (data) => ({
+      id: data._id,
+      name: data.name,
+      image: data.image,
+      oppType: data.oppType,
+      userType: data.userType,
+      deadline: data.deadline_date,
+      isApproved: data.isApproved
+    })
+
+  const toOpps = (dataArr) => {
+    const arr = [];
+   
+    dataArr.map((i)=>{
+      arr.push(getOpp(i))
+      return false;
+    })
+    return arr;
+  }
+
+  useEffect(() => {
+    try {
+      axios
+        .get(`http://localhost:8000/api/admin/opportunities`)
+        .then((response) => {setOpps(toOpps(response.data))});
+        
+    } catch (err) {
+      // Handle Error Here
+      console.error(err);
+    } // };
+  }, []);
+
+  console.log(opps);
+
   return (
     <Page title="Opportunity">
       <Container>
@@ -180,8 +232,9 @@ export default function Opportunity() {
 
         <Card>
           <DataGrid
-            rows={rows}
+            rows={opps}
             columns={columns}
+            rowHeight={160}
             pageSize={5}
             rowsPerPageOptions={[5]}
             checkboxSelection
